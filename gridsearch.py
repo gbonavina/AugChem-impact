@@ -1,15 +1,3 @@
-# passo a passo pra eu desenvolver isso:
-# 1 entender como funciona o algoritmo do grid search (DONE!)
-# 2 fazer um grid search que é capaz de apenas gerar varios arquivos de aumento de dados (sem treinar a principio) (DONE!)
-# 3 aplicar o modelo que eu ja tinha pra treinar nesses dados
-
-## aqui eu ja fiz o gridsearch para os datasets, entao eu teria a função acima para treinar
-## o modelo (talvez nao seja a abordagem mais eficiente, porque primeiro eu to criando os datasets
-## e depois treinando, talvez faça mais sentido eu criar e ja treinar...)
-
-## amanha quero implementar o modelo de facto para fazer o grid search. depois disso vou rodar algumas iterações so 
-## pra ver se ta funcionando e depois pedir pro Quiles pra mandar pra alguma WS
-
 from augchem.core import Augmentator
 import itertools
 import os 
