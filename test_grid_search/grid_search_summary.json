@@ -1,0 +1,81 @@
+{
+  "grid_search_info": {
+    "timestamp": "2025-08-04T16:47:12.951430",
+    "total_experiments": 2,
+    "successful_experiments": 2,
+    "failed_experiments": 0,
+    "success_rate": 100.0,
+    "base_dataset": "QM9.csv",
+    "output_directory": "test_grid_search"
+  },
+  "experiments": [
+    {
+      "experiment_id": 0,
+      "status": "success",
+      "parameters": {
+        "augmentation_methods": [
+          "enumeration"
+        ],
+        "augment_percentage": 0.1,
+        "mask_ratio": 0.0,
+        "delete_ratio": 0.0
+      },
+      "metrics": {
+        "losses": {
+          "train_loss": 0.0009538218181873874,
+          "val_loss": 0.000942285988029376,
+          "test_loss": 0.0009513194528762656
+        },
+        "regression_metrics": {
+          "test_r2": 0.7849230633083086,
+          "test_mae": 0.4120609164237976,
+          "test_mse": 0.3803287744522095,
+          "test_rmse": 0.6167080402374268
+        }
+      },
+      "data_stats": {
+        "total_samples": 147167,
+        "train_samples": 73583,
+        "val_samples": 36792,
+        "test_samples": 36792
+      },
+      "duration_seconds": 127.034085,
+      "dataset_size": 147267,
+      "timestamp": "2025-08-04T16:44:10.179299"
+    },
+    {
+      "experiment_id": 1,
+      "status": "success",
+      "parameters": {
+        "augmentation_methods": [
+          "enumeration"
+        ],
+        "augment_percentage": 0.3,
+        "mask_ratio": 0.0,
+        "delete_ratio": 0.0
+      },
+      "metrics": {
+        "losses": {
+          "train_loss": 0.0010173057573909195,
+          "val_loss": 0.000935410883345635,
+          "test_loss": 0.0009098768694427781
+        },
+        "regression_metrics": {
+          "test_r2": 0.7951324250218839,
+          "test_mae": 0.38153088092803955,
+          "test_mse": 0.36295175552368164,
+          "test_rmse": 0.6024547815322876
+        }
+      },
+      "data_stats": {
+        "total_samples": 173814,
+        "train_samples": 86907,
+        "val_samples": 43453,
+        "test_samples": 43454
+      },
+      "duration_seconds": 182.761162,
+      "dataset_size": 173930,
+      "timestamp": "2025-08-04T16:47:12.944448"
+    }
+  ]
+}
