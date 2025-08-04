@@ -1,8 +1,6 @@
 from gridsearch import GridSearch
 
-# Ta dando um erro na execução pq os dados gerados pelo augchem sao para CL, (label nula), vou criar
-# uma flag na lib pro usuario selecionar se ele vai usar pra CL ou nao, acho que isso resolve o problema.
-
+# Example configuration for testing the grid search
 test_config = {
             'epochs': 5,
             'batch_size': 128, 
