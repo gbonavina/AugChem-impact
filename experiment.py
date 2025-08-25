@@ -1,15 +1,14 @@
 from gridsearch import GridSearch
 
-# Example configuration for testing the grid search
 test_config = {
-            'epochs': 5,
-            'batch_size': 128, 
+            'epochs': 250,
+            'batch_size': 32, 
             'lr': 0.00038419788129315696,
             'dropout': 0.3520475751955372,
             'weight_decay': 1.0528482325186746e-06,
             'num_layers': 2,
             'hidden_dim': 256,
-            'embedding_dim': 64
+            'embedding_dim': 16
         }
 
 grid = GridSearch(
