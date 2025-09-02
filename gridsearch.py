@@ -7,9 +7,9 @@ from datetime import datetime
 import tqdm
 import time
 import pandas as pd
+import torch
 from preprocessing import PreProcessing
 from lstm_regressor import LSTM, LSTMTrainer
-import torch
 import torch.nn as nn 
 import numpy as np
 
@@ -47,10 +47,8 @@ class GridSearch:
         }
 
     def generate_parameter_combinations(self):
-        keys = list(self.param_grid.keys())
-        values = list(self.param_grid.values())
-
         combinations = []
+
         for methods in self.param_grid['augmentation_methods']:
             for aug_perc in self.param_grid['augment_percentage']:
                 needs_mask_ratio = 'mask' in methods
@@ -193,9 +191,9 @@ class GridSearch:
     def run_grid_search(self):
         """Pipeline otimizado: gera → treina → salva resultados → descarta"""
         combinations = self.generate_parameter_combinations()
-        print(f"Starting optimized grid search with {len(combinations)} experiments")
-        print(f"Memory optimization: Datasets generated and discarded immediately")
-        print(f"Results will be saved in: {self.output_dir}")
+        # print(f"Starting optimized grid search with {len(combinations)} experiments")
+        # print(f"Memory optimization: Datasets generated and discarded immediately")
+        # print(f"Results will be saved in: {self.output_dir}")
 
         experiments_log = []
         successful_count = 0
@@ -204,21 +202,21 @@ class GridSearch:
             experiment_start_time = datetime.now()
             
             methods_str = ', '.join(params['augmentation_methods'])
-            print(f"\n[{i+1}/{len(combinations)}] Methods: {methods_str}")
-            print(f"   Augment %: {params['augment_percentage']}")
-            if 'mask' in params['augmentation_methods']:
-                print(f"   Mask ratio: {params['mask_ratio']}")
-            if 'delete' in params['augmentation_methods']:
-                print(f"   Delete ratio: {params['delete_ratio']}")
+            # print(f"\n[{i+1}/{len(combinations)}] Methods: {methods_str}")
+            # print(f"   Augment %: {params['augment_percentage']}")
+            # if 'mask' in params['augmentation_methods']:
+            #     print(f"   Mask ratio: {params['mask_ratio']}")
+            # if 'delete' in params['augmentation_methods']:
+            #     print(f"   Delete ratio: {params['delete_ratio']}")
                 
             try: 
                 # ETAPA 1: Gerar dataset aumentado em memória
-                print("   Generating augmented dataset...")
+                # print("   Generating augmented dataset...")
                 augmented_data = self.apply_augmentation(params)
-                print(f"   Dataset generated: {len(augmented_data)} samples")
+                # print(f"   Dataset generated: {len(augmented_data)} samples")
                 
                 # ETAPA 2: Treinar modelo imediatamente
-                print("   Training neural network...")
+                # print("   Training neural network...")
                 training_results = self.train_model_on_dataset(augmented_data)
                 
                 experiment_duration = (datetime.now() - experiment_start_time).total_seconds()
@@ -240,15 +238,15 @@ class GridSearch:
                     successful_count += 1
                     r2_score = training_results['metrics']['regression_metrics']['test_r2']
                     test_loss = training_results['metrics']['losses']['test_loss']
-                    print(f"   Success! Test R²: {r2_score:.3f}, Loss: {test_loss:.4f}")
-                else:
-                    print(f"   ❌ Training failed: {training_results.get('error', 'Unknown error')}")
+                    # print(f"   Success! Test R²: {r2_score:.3f}, Loss: {test_loss:.4f}")
+                # else:
+                #     print(f"   ❌ Training failed: {training_results.get('error', 'Unknown error')}")
                 
                 del augmented_data
                 
                 if (i + 1) % 10 == 0:
                     self.save_intermediate_progress(experiments_log, i + 1)
-                    print(f"   Progress saved: {successful_count}/{i+1} successful")
+                    # print(f"   Progress saved: {successful_count}/{i+1} successful")
 
             except Exception as e:
                 print(f"   ❌ Pipeline failed: {str(e)}")
@@ -262,9 +260,9 @@ class GridSearch:
                 })
         
         # Análise final e salvamento
-        print(f"\n Grid Search completed!")
-        print(f"✅ Successful experiments: {successful_count}/{len(combinations)}")
-        print(f"📊 Success rate: {successful_count/len(combinations)*100:.1f}%")
+        # print(f"\n Grid Search completed!")
+        # print(f"✅ Successful experiments: {successful_count}/{len(combinations)}")
+        # print(f"📊 Success rate: {successful_count/len(combinations)*100:.1f}%")
         
         self.generate_analysis_files(experiments_log)
         
@@ -326,17 +324,17 @@ class GridSearch:
             top_10 = df_analysis.nsmallest(10, 'test_loss')
             top_10.to_csv(self.output_dir / 'top_10_experiments.csv', index=False)
             
-            print(f"📈 Analysis files created:")
-            print(f"   Main results: {self.output_dir / 'paper_analysis_results.csv'}")
-            print(f"   Top 10: {self.output_dir / 'top_10_experiments.csv'}")
+            # print(f"📈 Analysis files created:")
+            # print(f"   Main results: {self.output_dir / 'paper_analysis_results.csv'}")
+            # print(f"   Top 10: {self.output_dir / 'top_10_experiments.csv'}")
             
             # Mostrar melhor resultado
             best_exp = df_analysis.loc[df_analysis['test_loss'].idxmin()]
-            print(f"\n🏆 BEST EXPERIMENT:")
-            print(f"   ID: {best_exp['experiment_id']}")
-            print(f"   Methods: {best_exp['method_combination']}")
-            print(f"   Test Loss: {best_exp['test_loss']:.4f}")
-            print(f"   Test R²: {best_exp['test_r2']:.3f}")
-            print(f"   Augment %: {best_exp['augment_percentage']}")
+            # print(f"\n🏆 BEST EXPERIMENT:")
+            # print(f"   ID: {best_exp['experiment_id']}")
+            # print(f"   Methods: {best_exp['method_combination']}")
+            # print(f"   Test Loss: {best_exp['test_loss']:.4f}")
+            # print(f"   Test R²: {best_exp['test_r2']:.3f}")
+            # print(f"   Augment %: {best_exp['augment_percentage']}")
         else:
             print("❌ No valid metrics found for analysis")

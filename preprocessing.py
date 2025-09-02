@@ -26,9 +26,10 @@ class PreProcessing():
             '[InH-]', '[InH2-]', '[InH3-]', '[N+]', '[N-]', '[N@+]', '[N@@+]', '[N@@]', '[N@]',
             '[NH+]', '[NH-]', '[NH2+]', '[NH3+]', '[NH]', '[N]', '[NbH3-]', '[O+]', '[O-]', '[O]',
             '[PH+]', '[PH3-]', '[PH4-]', '[S+]', '[SbH3-]', '[Si]', '[TaH3-]', '[c-]', '[cH-]',
-            '[n+]', '[n-]', '[nH+]', '[nH]', '[o+]', '\\', 'c', 'n', 'o', '[M]', ''
+            '[n+]', '[n-]', '[nH+]', '[nH]', '[o+]', '\\', 'c', 'n', 'o', '<UNK>', '[M]', ''
         ]
 
+        self.unk_idx = self.vocab.index('<UNK>')
         self.padding_idx = len(self.vocab) - 1
 
         # * [M] is the token for masking
@@ -45,7 +46,7 @@ class PreProcessing():
 
             for token in tokens:
                 vec = np.zeros(len(self.vocab), dtype=np.float32)
-                idx = token_to_index[token]
+                idx = token_to_index.get(token, self.unk_idx)  # Usa unk_idx se não encontrar
                 vec[idx] = 1.0
                 one_hot_seq.append(vec)
 
