@@ -66,7 +66,7 @@ class LSTMTrainer:
             val_loss += loss.item()
             val_losses.append(val_loss)
 
-            if epoch % 30 == 0:
+            if epoch % 50 == 0:
                 print(f"Epoch {epoch+1}/{num_epochs} — Train Loss: {total_loss:.4f} — Val Loss: {val_loss:.4f}")
 
         return train_losses, val_losses

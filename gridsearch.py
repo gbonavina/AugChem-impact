@@ -22,7 +22,7 @@ class GridSearch:
         # params I got that were the best w/ optuna (baysean optimization) for an LSTM regressor
         self.model_config = model_config or {
             'epochs': 100,
-            'batch_size': 32, 
+            'batch_size': 128, 
             'lr': 0.00038419788129315696,
             'dropout': 0.3520475751955372,
             'weight_decay': 1.0528482325186746e-06,
@@ -31,17 +31,21 @@ class GridSearch:
             'embedding_dim': 64
         }
 
-        smiles_methods = ['enumeration', 'mask', 'delete', 'swap', 'fusion']
-        all_combinations = []
-        
+        # smiles_methods = ['enumeration', 'mask', 'delete', 'swap', 'fusion']
+        all_combinations = [
+            'enumeration', 'mask', 'delete', 'swap', 'fusion', ['enumeration', 'mask'],
+            ['enumeration', 'delete'], ['enumeration', 'swap'], ['enumeration', 'fusion'],
+            ['mask', 'delete'], ['mask', 'swap'], ['enumeration', 'mask', 'swap', 'delete', 'fusion'] 
+        ]
+
         # fazer as combinações dos 5 métodos (120 combinações!)
-        for r in range(1, len(smiles_methods) + 1):
-            for combo in itertools.combinations(smiles_methods, r):
-                all_combinations.append(list(combo))
+        # for r in range(1, len(smiles_methods) + 1):
+        #     for combo in itertools.combinations(smiles_methods, r):
+        #         all_combinations.append(list(combo))
 
         self.param_grid = {
-            'mask_ratio': [0.05, 0.1, 0.2, 0.3, 0.5],
-            'delete_ratio': [0.05, 0.1, 0.2, 0.3, 0.5],
+            'mask_ratio': [0.05, 0.1, 0.2, 0.4],
+            'delete_ratio': [0.05, 0.1, 0.2, 0.4],
             'augment_percentage': [0.1, 0.3, 0.5, 0.7, 1.0],
             'augmentation_methods': all_combinations
         }
