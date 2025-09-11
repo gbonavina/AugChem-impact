@@ -35,7 +35,7 @@ class GridSearch:
         all_combinations = [
             'enumeration', 'mask', 'delete', 'swap', 'fusion', ['enumeration', 'mask'],
             ['enumeration', 'delete'], ['enumeration', 'swap'], ['enumeration', 'fusion'],
-            ['mask', 'delete'], ['mask', 'swap'], ['enumeration', 'mask', 'swap', 'delete', 'fusion'] 
+            ['mask', 'swap'], ['enumeration', 'mask', 'swap', 'delete', 'fusion'] 
         ]
 
         # fazer as combinações dos 5 métodos (120 combinações!)
@@ -44,9 +44,9 @@ class GridSearch:
         #         all_combinations.append(list(combo))
 
         self.param_grid = {
-            'mask_ratio': [0.05, 0.1, 0.2, 0.4],
-            'delete_ratio': [0.05, 0.1, 0.2, 0.4],
-            'augment_percentage': [0.1, 0.3, 0.5, 0.7, 1.0],
+            'mask_ratio': [0.05, 0.1, 0.3],
+            'delete_ratio': [0.05, 0.1, 0.3],
+            'augment_percentage': [0.1, 0.3, 0.6, 1.0],
             'augmentation_methods': all_combinations
         }
 
