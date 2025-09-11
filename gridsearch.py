@@ -202,6 +202,28 @@ class GridSearch:
         experiments_log = []
         successful_count = 0
 
+        # Caminho do CSV incremental
+        status_csv_path = self.output_dir / 'experiments_status.csv'
+        # Se o arquivo não existe, cria com cabeçalho
+        if not status_csv_path.exists():
+            pd.DataFrame([{
+                'experiment_id': 'experiment_id',
+                'status': 'status',
+                'method_combination': 'method_combination',
+                'num_methods': 'num_methods',
+                'augment_percentage': 'augment_percentage',
+                'mask_ratio': 'mask_ratio',
+                'delete_ratio': 'delete_ratio',
+                'test_loss': 'test_loss',
+                'test_r2': 'test_r2',
+                'test_mae': 'test_mae',
+                'test_rmse': 'test_rmse',
+                'dataset_size': 'dataset_size',
+                'duration_seconds': 'duration_seconds',
+                'timestamp': 'timestamp',
+                'error': 'error'
+            }]).iloc[0:0].to_csv(status_csv_path, index=False)
+
         for i, params in enumerate(tqdm.tqdm(combinations, desc='Grid Search Progress')):
             experiment_start_time = datetime.now()
             
@@ -237,6 +259,27 @@ class GridSearch:
                 }
 
                 experiments_log.append(experiment_result)
+
+                # Salvar resultado incremental no CSV
+                metrics = experiment_result.get('metrics', {})
+                row = {
+                    'experiment_id': experiment_result['experiment_id'],
+                    'status': experiment_result['status'],
+                    'method_combination': '|'.join(params['augmentation_methods']),
+                    'num_methods': len(params['augmentation_methods']),
+                    'augment_percentage': params['augment_percentage'],
+                    'mask_ratio': params.get('mask_ratio', 'N/A'),
+                    'delete_ratio': params.get('delete_ratio', 'N/A'),
+                    'test_loss': metrics.get('losses', {}).get('test_loss', 'N/A'),
+                    'test_r2': metrics.get('regression_metrics', {}).get('test_r2', 'N/A'),
+                    'test_mae': metrics.get('regression_metrics', {}).get('test_mae', 'N/A'),
+                    'test_rmse': metrics.get('regression_metrics', {}).get('test_rmse', 'N/A'),
+                    'dataset_size': experiment_result.get('dataset_size', 'N/A'),
+                    'duration_seconds': experiment_result.get('duration_seconds', 'N/A'),
+                    'timestamp': experiment_result['timestamp'],
+                    'error': training_results.get('error', '')
+                }
+                pd.DataFrame([row]).to_csv(status_csv_path, mode='a', header=False, index=False)
                 
                 if training_results['status'] == 'success':
                     successful_count += 1
@@ -262,6 +305,26 @@ class GridSearch:
                     'duration_seconds': (datetime.now() - experiment_start_time).total_seconds(),
                     'timestamp': datetime.now().isoformat()
                 })
+
+                # Salvar erro incremental no CSV
+                row = {
+                    'experiment_id': i,
+                    'status': 'error',
+                    'method_combination': '|'.join(params['augmentation_methods']),
+                    'num_methods': len(params['augmentation_methods']),
+                    'augment_percentage': params['augment_percentage'],
+                    'mask_ratio': params.get('mask_ratio', 'N/A'),
+                    'delete_ratio': params.get('delete_ratio', 'N/A'),
+                    'test_loss': 'N/A',
+                    'test_r2': 'N/A',
+                    'test_mae': 'N/A',
+                    'test_rmse': 'N/A',
+                    'dataset_size': 'N/A',
+                    'duration_seconds': (datetime.now() - experiment_start_time).total_seconds(),
+                    'timestamp': datetime.now().isoformat(),
+                    'error': str(e)
+                }
+                pd.DataFrame([row]).to_csv(status_csv_path, mode='a', header=False, index=False)
         
         # Análise final e salvamento
         # print(f"\n Grid Search completed!")
